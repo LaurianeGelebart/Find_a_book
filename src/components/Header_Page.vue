@@ -9,12 +9,12 @@
             :class="{ 'switch-toggle-checked': userTheme === 'dark-theme' }"
           ></div>
         </label>
-        <input type="text" v-model="search" placeholder="Nom d'un livre">
+        <input type="text" @keydown.enter="emitUserSearch" v-model="search" placeholder="Search a book">
        </div>
 
         <div class="title">
-            <h1>Tu cherches un livre à lire ?</h1>
-            <h2>Ici tu vas le trouver</h2>
+            <h1>You are searching for a book ?</h1>
+            <h2>Here you will find it</h2>
         </div>
     </div>
   </template>
@@ -22,17 +22,27 @@
   <script>
   export default {
     name: 'Header_Page',
+    props: ['userSearch', 'activPage'],
+    emits: ["update:userSearch", "update:activPage"],
     data() {
       return {
         userTheme: "light-theme",
+        search: ""
       };
     },
+
     methods: {
+      emitUserSearch() {
+        this.$emit("update:userSearch", this.search)
+        this.$emit("update:activPage", "Search")
+      }, 
+
       setTheme(theme) {
         localStorage.setItem("user-theme", theme);
         this.userTheme = theme;
         document.documentElement.className = theme;
       },
+
       toggleTheme() {
         const activeTheme = localStorage.getItem("user-theme");
         if (activeTheme === "light-theme") {
@@ -40,8 +50,8 @@
         } else {
           this.setTheme("light-theme");
         }
-        console.log(this.userTheme)
       }, 
+
       getMediaPreference() {
         const hasDarkPreference = window.matchMedia(
           "(prefers-color-scheme: dark)"
@@ -52,10 +62,12 @@
           return "light-theme";
         }
       },
+
       getTheme() {
         return localStorage.getItem("user-theme");
       }
     },
+
     mounted() {
       const initUserTheme = this.getTheme() || this.getMediaPreference();
       this.setTheme(initUserTheme);
@@ -67,11 +79,6 @@
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
-
-
-
-
-
 .Header_Page{
   background: center no-repeat url("../img/images.jpeg");
   background-size: cover;
@@ -103,7 +110,7 @@
   font-size: 4rem;
 }
 .menu input{
-  width: 16rem;
+  width: 20rem;
   height: 50%;
   margin: auto 3rem;
 }
@@ -124,7 +131,6 @@
   transform: translateX(0);
   transition: transform 0.3s ease, background-color 0.5s ease;
 }
-
 .switch-label {
   width: 4rem; 
 
@@ -144,15 +150,29 @@
   z-index: 1;
 } 
 
+
+@media screen and (max-width: 1024px) {
+  .title  h1{
+    font-size: 4rem;
+  }
+  .title h2{
+    font-size: 2.5rem;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .Header_Page{
-    height: 20vh;
+    height: 80vh;
   }
   .title  h1{
     font-size: 3rem;
   }
   .title h2{
     font-size: 1.8rem;
+  }
+  .menu input{
+    width: 16rem;
+    margin: auto 1.5rem;
   }
 }
 

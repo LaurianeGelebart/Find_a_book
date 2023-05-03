@@ -1,4 +1,9 @@
-# web_project
+# Trouver un livre 
+By Lauriane Gélébart
+
+## What is the project ?
+Web site made with vue JS and data from the Google Book API  
+As part of the web IMAC course project in 2023  
 
 ## Project setup
 ```

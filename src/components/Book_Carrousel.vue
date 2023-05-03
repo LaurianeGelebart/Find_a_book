@@ -1,10 +1,10 @@
 <template>
     <div class="Book_Carrousel">
         <h2>{{ name }}</h2>  
-        <div v-if="bookData.items"  class="content_carrousel">
+        <div v-if="bookData"  class="content_carrousel">
           <img v-on:click="back" class="arrow" id="back" src="../img/back.svg">
           <ul class="carrousel">
-            <Book_Card class="card" v-for="(item) in bookData.items" :key="item.id" :infos="item.volumeInfo" :authors="item.volumeInfo.authors" :title="item.volumeInfo.title" :image-links="item.volumeInfo.imageLinks"></Book_Card >
+            <Book_Card class="card" v-for="(item) in bookData" :key="item.id" :infos="item.volumeInfo" :authors="item.volumeInfo.authors" :title="item.volumeInfo.title" :image-links="item.volumeInfo.imageLinks"></Book_Card >
           </ul>
           <img v-on:click="forward" class="arrow" id="forward" src="../img/forward.svg">
         </div>
@@ -35,33 +35,37 @@ import { getBooks } from '../api/getBooksData.js'
           this.bookData = await getBooks()
         }, 
         forward(){
-          this.position = this.position-40 
-          this.tx = this.position+"vw"
+          if (this.position > -100){
+            this.position = this.position-40 
+            this.tx = this.position+"rem"
+          }
         },
         back(){
-          this.position = this.position+40 
-          this.tx = this.position+"vw"
+          if (this.position < 0){
+            this.position = this.position+40 
+            this.tx = this.position+"rem"
+          }
         }
     },
     beforeMount(){
       this.retrieveBookData()
     }
   }
-  </script>
-  
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
-  <style scoped>
-  .Book_Carrousel{
-    padding: 4rem 7rem;
-    margin: 5vh 0;
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.Book_Carrousel{
+  padding: 4rem 7rem;
+  margin: 5vh 0;
   }
 .carrousel{
     display: flex;
     flex-direction: row;
     width: 100%;
     overflow: hidden;
+    padding: 0;
 }
-
 .content_carrousel{
   display: flex;
   flex-direction: row;
@@ -83,5 +87,28 @@ h2{
   transform: translateX(v-bind(tx));
 }
 
-  </style>
-  
+@media screen and (max-width: 1024px) {
+  .Book_Carrousel{
+    padding: 4rem 1rem;
+  }
+  h2{
+    padding: 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .Book_Carrousel{
+    padding: 4rem 1rem;
+  }
+  h2{
+    padding: 0;
+  }
+  .arrow{
+    height: 2rem;
+  }
+  .arrow:hover{
+    height: 2.5rem;
+  }
+}
+
+</style>
