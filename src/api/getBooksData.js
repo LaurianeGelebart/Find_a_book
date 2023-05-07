@@ -1,6 +1,5 @@
-const getBooks = async function() {
-    const response = await fetch("https://www.googleapis.com/books/v1/volumes?q=harry&key=AIzaSyBB6WfqDdlr307S_gdPrvNq5UrIpedl_TA")
-    // const response = await fetch("https://www.googleapis.com/books/v1/volumes?q=harry&startIndex=0&maxResults=40&key=AIzaSyBB6WfqDdlr307S_gdPrvNq5UrIpedl_TA")
+const getBooks = async function(request, order) {
+    const response = await fetch("https://www.googleapis.com/books/v1/volumes?q="+request+"&orderBy="+order+"&printType=books&key=AIzaSyBB6WfqDdlr307S_gdPrvNq5UrIpedl_TA")
     if (response.status == 200) {
         let data = await response.json();
         return data.items;
@@ -13,7 +12,6 @@ const getBooksForUser = async function(request) {
     const response = await fetch("https://www.googleapis.com/books/v1/volumes?q="+request+"&printType=books&key=AIzaSyBB6WfqDdlr307S_gdPrvNq5UrIpedl_TA")
 if (response.status == 200) {
     let data = await response.json();
-    console.log(data)
     return data.items;
 } else {
     new Error(response.statusText)

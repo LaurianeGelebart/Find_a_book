@@ -71,7 +71,6 @@
     mounted() {
       const initUserTheme = this.getTheme() || this.getMediaPreference();
       this.setTheme(initUserTheme);
-      console.log(initUserTheme)
     }
 
   }

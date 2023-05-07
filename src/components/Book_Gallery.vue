@@ -19,16 +19,6 @@
         <h2>{{ name }}</h2> 
         
         <div v-if="bookData" class="galerie">
-          <!-- <Book_Card v-for="(item) in bookData.items" 
-          :key="item.id" 
-          :description="item.volumeInfo.description" 
-          :dateFull="item.volumeInfo.publishedDate" 
-          :isbn="item.volumeInfo.industryIdentifiers[0].identifier" 
-          :authors="item.volumeInfo.authors" 
-          :title="item.volumeInfo.title" 
-          :image-links="item.volumeInfo.imageLinks">
-          </Book_Card > -->
-          <!-- <Book_Card v-for="(item) in bookData.items" :key="item.id" :infos="item.volumeInfo" :authors="item.volumeInfo.authors" :title="item.volumeInfo.title" :image-links="item.volumeInfo.imageLinks"></Book_Card > -->
           <Book_Card v-for="(item) in bookOrganizedData" :key="item.volumeInfo.industryIdentifiers[0].identifier" :infos="item.volumeInfo" :authors="item.volumeInfo.authors" :title="item.volumeInfo.title" :image-links="item.volumeInfo.imageLinks"></Book_Card >
         </div>
         <button v-on:click="() => getMoreBook()" class="getMoreBook">Voir plus</button>
@@ -75,14 +65,15 @@ import { getBookBySubject } from '@/api/getBooksData.js'
             if (["AZName", "ZAName"].includes(this.booksSortType)){
                 return a.volumeInfo["authors"][0].localeCompare(b.volumeInfo["authors"][0]) 
             }
-            else {
-           // else if(["AZAuthors", "ZAAuthors"].includes(this.booksSortType)){
+           else if(["AZAuthors", "ZAAuthors"].includes(this.booksSortType)){
               return a.volumeInfo["title"].localeCompare(b.volumeInfo["title"]) 
             }
-            // else {
-            //   console.log(a.volumeInfo["averageRating"])
-            //   return a.volumeInfo["averageRating"].localeCompare(b.volumeInfo["averageRating"]) 
-            // }
+            else {
+              const ratingA = a.volumeInfo["averageRating"] || 0;
+              const ratingB = b.volumeInfo["averageRating"] || 0;
+              if(["topStars"].includes(this.booksSortType)) return ratingA - ratingB;
+              return ratingB - ratingA;
+            }
           } 
           const filterFunc = (a) => a.volumeInfo["title"].toLowerCase().includes(this.bookSearch.toLowerCase())
           let data = this.bookData.slice()

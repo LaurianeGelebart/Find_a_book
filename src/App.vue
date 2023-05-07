@@ -26,12 +26,13 @@
 
       <div class="content">
         <div v-show="this.activPage == 'Home'" >
-          <Book_Carrousel name="The news" ></Book_Carrousel>
+          <Book_Carrousel name="The news" search="Charles III" order="newest"></Book_Carrousel>
           <div class="description_site">
             <h2>Find a book ?</h2>
-            <p >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vulputate dignissim suspendisse in est. Arcu ac tortor dignissim convallis aenean. Elit ullamcorper dignissim cras tincidunt lobortis feugiat. Sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque. In hendrerit gravida rutrum quisque. Turpis egestas maecenas pharetra convallis. Enim praesent elementum facilisis leo vel fringilla est. Augue interdum velit euismod in pellentesque massa placerat duis. Semper risus in hendrerit gravida. Orci porta non pulvinar neque laoreet suspendisse interdum consectetur libero. In nulla posuere sollicitudin aliquam ultrices sagittis. Egestas dui id ornare arcu odio ut sem nulla. Urna et pharetra pharetra massa massa ultricies mi quis. Amet facilisis magna etiam tempor orci eu lobortis elementum. Dictum non consectetur a erat nam at. Tempus quam pellentesque nec nam aliquam sem. <br> Orci dapibus ultrices in iaculis nunc sed augue lacus. Ut lectus arcu bibendum at varius. Justo nec ultrices dui sapien eget. Sapien nec sagittis aliquam malesuada bibendum arcu. Nullam ac tortor vitae purus faucibus ornare suspendisse sed nisi. Morbi leo urna molestie at elementum eu facilisis. Ornare massa eget egestas purus viverra accumsan in. Donec enim diam vulputate ut pharetra sit amet. At erat pellentesque adipiscing commodo elit at. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi tincidunt. Est placerat in egestas erat imperdiet. Proin libero nunc consequat interdum varius. Placerat duis ultricies lacus sed. Arcu non odio euismod lacinia at quis. Ut diam quam nulla porttitor massa id neque. Tellus rutrum tellus pellentesque eu tincidunt.<br>Vulputate odio ut enim blandit volutpat maecenas. Tortor condimentum lacinia quis vel eros donec ac. Nibh tortor id aliquet lectus proin nibh. A iaculis at erat pellentesque adipiscing. Sed odio morbi quis commodo odio aenean sed. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Velit aliquet sagittis id consectetur purus ut. Turpis massa tincidunt dui ut ornare lectus sit. Nunc eget lorem dolor sed viverra ipsum nunc aliquet. Cursus in hac habitasse platea dictumst quisque sagittis purus. Euismod nisi porta lorem mollis. Nisi scelerisque eu ultrices vitae. Quam quisque id diam vel quam elementum pulvinar. Nisi porta lorem mollis aliquam. Aliquet risus feugiat in ante metus.</p>
+            <p class="des">Welcome to our wacky world of books! We believe that reading is not just a hobby, but a way of life. Our love for books is as boundless as our imagination, and we want to share that passion with all of you. With our site, you can dive into the world of books by themes, and discover new stories that will take you to other galaxies, magical lands, and thrilling adventures. We understand that finding the perfect book can be a challenge, and that's why we're here to help you find your literary soulmate.<br><br>Our site is designed to be a fun and easy way to browse and search for books. With our search bar, you can type in any word that comes to mind, and we'll find books that match your interests. We want to make it easy for you to discover new stories and authors, and that's why we've curated our collections based on themes that will pique your interest. We believe that books have the power to transport you to new worlds, inspire you to greatness, and connect you with people from all walks of life.<br><br>So come on in, and start your journey through the wonderful world of books. Whether you're a fan of romance, sci-fi, or mystery, we have something for you. We're confident that you'll find the book that speaks to your heart, and makes you fall in love with reading all over again. So grab a cup of tea, curl up in your favorite chair, and let us take you on a journey you'll never forget. Because with our site, anything is possible, and the perfect book is just a click away.</p>
           </div>
-          <Book_Carrousel name="Our recommandations"></Book_Carrousel>
+          <Book_Carrousel name="The works of Joseph Kessel" order="relevance" search="Joseph Kessel"></Book_Carrousel>
+          <Book_Carrousel name="The works of Harlon Coben" order="relevance" search="Harlan Coben"></Book_Carrousel>
         </div>
         <!-- <Book_Gallery v-for="(category) in categories" :key=categories v-show=category :name=category :category=category></Book_Gallery> -->
         <Book_Gallery v-for="(category) in categories" :key="category" v-show="this.activPage == category" :name=category :category=category></Book_Gallery>
@@ -162,6 +163,10 @@ nav {
 }
 .navbar_collapse button:hover{
   border-bottom: 7px solid var(--accent-color-hover);
+}
+
+.des{
+  font-size: 1.8rem; 
 }
 .fleche{
   fill: var(--text-primary-color);

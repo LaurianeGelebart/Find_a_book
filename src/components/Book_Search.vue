@@ -2,7 +2,6 @@
     <div class="Book_Search">
 
       <div class="options">
-        <input type="text" v-model="bookSearch" placeholder="Chercher un livre">
         <div class="tri">
           <label for="book_sort">Trier par </label>
           <select v-model="booksSortType" id="book_sort">
@@ -42,7 +41,6 @@ import { getBooksForUser } from '@/api/getBooksData.js'
       return {
         bookData: [],
         booksSortType: "AZName",
-        bookSearch : ""
         }
     },
 
@@ -50,7 +48,6 @@ import { getBooksForUser } from '@/api/getBooksData.js'
         async retrieveBookData() {
             if (this.userSearch && this.userSearch !== ""){
                 this.bookData = await getBooksForUser(this.userSearch)
-                console.log(this.bookData)
             }
         }
     },
@@ -62,13 +59,17 @@ import { getBooksForUser } from '@/api/getBooksData.js'
             if (["AZName", "ZAName"].includes(this.booksSortType)){
                 return a.volumeInfo["authors"][0].localeCompare(b.volumeInfo["authors"][0]) 
             }
+           else if(["AZAuthors", "ZAAuthors"].includes(this.booksSortType)){
+              return a.volumeInfo["title"].localeCompare(b.volumeInfo["title"]) 
+            }
             else {
-                return a.volumeInfo["title"].localeCompare(b.volumeInfo["title"]) 
-              }
-          }
-          const filterFunc = (a) => a.volumeInfo["title"].toLowerCase().includes(this.bookSearch.toLowerCase())
+              const ratingA = a.volumeInfo["averageRating"] || 0;
+              const ratingB = b.volumeInfo["averageRating"] || 0;
+              if(["topStars"].includes(this.booksSortType)) return ratingA - ratingB;
+              return ratingB - ratingA;
+            }
+          } 
           let data = this.bookData.slice()
-          data = data.filter(filterFunc)
           data.sort(comparator)
           if (reversed) data = data.reverse()
           return data

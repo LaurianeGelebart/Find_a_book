@@ -18,7 +18,9 @@ import { getBooks } from '../api/getBooksData.js'
   export default {
     name: 'Book_Carrousel',
     props: {
-      name: {type: String, required: true}
+      name: {type: String, required: true},
+      search: {type: String, required: true},
+      order: {type: String, required: true},
     },
     components: {
         Book_Card
@@ -32,7 +34,7 @@ import { getBooks } from '../api/getBooksData.js'
     },
     methods: {
         async retrieveBookData() {
-          this.bookData = await getBooks()
+          this.bookData = await getBooks(this.search, this.order)
         }, 
         forward(){
           if (this.position > -100){
