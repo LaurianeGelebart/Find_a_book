@@ -8,8 +8,8 @@ const getBooks = async function(request, order) {
     }
 } 
 
-const getBooksForUser = async function(request) {
-    const response = await fetch("https://www.googleapis.com/books/v1/volumes?q="+request+"&printType=books&key=AIzaSyBB6WfqDdlr307S_gdPrvNq5UrIpedl_TA")
+const getBooksForUser = async function(request, startIndex) {
+    const response = await fetch("https://www.googleapis.com/books/v1/volumes?q="+request+"&startIndex="+startIndex+"&maxResults=40&printType=books&key=AIzaSyBB6WfqDdlr307S_gdPrvNq5UrIpedl_TA")
 if (response.status == 200) {
     let data = await response.json();
     return data.items;

@@ -5,26 +5,19 @@
       <input type="text" v-model="bookSearch" placeholder="Search a book">
       <div class="tri">
         <label for="bookSort">Sort by</label>
-        <select v-model="booksSortType" id="bookSort">
-          <option value="AZName" :selected="booksSortType === 'AZName'">Names from A to Z</option>
-          <option value="ZAName" :selected="booksSortType === 'ZAName'">Names from Z to A</option>
-          <option value="AZAuthors" :selected="booksSortType === 'AZAuthors'">Authors from A to Z</option>
-          <option value="ZAAuthors" :selected="booksSortType === 'ZAAuthors'">Authors from Z to A</option>
-          <option value="newest" :selected="booksSortType === 'newest'">Newest</option>
-          <option value="oldest" :selected="booksSortType === 'oldest'">Oldest</option>
-          <option value="topStars" :selected="booksSortType === 'topStars'">Top rated</option>
-          <option value="lessStrars" :selected="booksSortType === 'lessStrars'">Lowest rated</option>
+        <select v-model="booksSortTypeActive" id="bookSort">
+          <option v-for="sort in booksSortType" :key="sort.value" :value="sort.value"
+            v-bind:selected="booksSortTypeActive === sort.value">{{ sort.name }}</option>
         </select>
       </div>
     </div>
 
     <h2>{{ name }}</h2>
 
-    <div v-if="bookData" class="galerie">
-      <BookCard v-for="(item) in bookOrganizedData" :key="item.volumeInfo.industryIdentifiers[0].identifier"
+    <div v-if="bookOrganizedData" class="galerie">
+      <BookCard v-for="(item) in bookOrganizedData" :key="item.volumeInfo.industryIdentifiers[0].identifier || ''"
         :infos="item.volumeInfo" :authors="item.volumeInfo.authors" :title="item.volumeInfo.title"
-        :image-links="item.volumeInfo.imageLinks"
-        :date="findYear(item.volumeInfo['publishedDate'])"></BookCard>
+        :image-links="item.volumeInfo.imageLinks" :date="findYear(item.volumeInfo['publishedDate'])"></BookCard>
     </div>
     <button v-on:click="() => getMoreBook()" class="getMoreBook">Voir plus</button>
 
@@ -35,12 +28,14 @@
 <script>
 import BookCard from './BookCard.vue'
 import { getBookBySubject } from '@/api/getBooksData.js'
+import { getBooksForUser } from '@/api/getBooksData.js'
 
 export default {
   name: 'BookGallery',
   props: {
     name: { type: String, required: true },
-    category: { type: String, required: true }
+    search: { type: String, required: true },
+    typeOfSearch: { type: String, required: true }
   },
   components: {
     BookCard
@@ -48,79 +43,100 @@ export default {
   data() {
     return {
       bookData: [],
-      booksSortType: "AZName",
+      booksSortTypeActive: "AZName",
       bookSearch: "",
-      startIndex: 0
+      startIndex: 0,
+      booksSortType: [{
+        value: "AZName",
+        name: "Names from A to Z",
+        sortFunction: (a, b) => this.sortByName(a, b)
+      }, {
+        value: "ZAName",
+        name: "Names from Z to A",
+        sortFunction: (a, b) => this.sortByName(a, b)
+      }, {
+        value: "newest",
+        name: "Newest",
+        sortFunction: (a, b) => this.sortByDate(a, b)
+      }, {
+        value: "oldest",
+        name: "Oldest",
+        sortFunction: (a, b) => this.sortByDate(a, b)
+      }, {
+        value: "topStars",
+        name: "Top rated",
+        sortFunction: (a, b) => this.sortByStars(a, b)
+      }, {
+        value: "lessStrars",
+        name: "Lowest rated",
+        sortFunction: (a, b) => this.sortByStars(a, b)
+      },
+      ],
     }
   },
   methods: {
     async retrieveBookData() {
-      this.bookData = await getBookBySubject(this.category, this.startIndex)
+      console.log(this.search)
+      if (this.typeOfSearch == "category") this.bookData = await getBookBySubject(this.search, this.startIndex)
+      else {
+        if (this.search && this.search !== "") {
+          this.bookData = await getBooksForUser(this.search, this.startIndex)
+        }
+      }
     },
     async getMoreBook() {
       this.startIndex += 40
-      const newBooks = await getBookBySubject(this.category, this.startIndex)
-        console.log(newBooks.length)
+      let newBooks;
+      if (this.typeOfSearch == "category") newBooks = await getBookBySubject(this.search, this.startIndex)
+      else newBooks = await getBooksForUser(this.search, this.startIndex)
       this.bookData = [...this.bookData, ...newBooks]
-    },
-    getBooksSortType() {
-      return localStorage.getItem("user-sortType")
-    },
-    setBooksSortType(type) {
-      localStorage.setItem("user-sortType", type)
     },
     findYear(date) {
       const year = new Date(date)
       return year.getFullYear()
+    },
+    sortByName(a, b) {
+      const titleA = a.volumeInfo["title"] || ""
+      const titleB = b.volumeInfo["title"] || ""
+      return titleA.localeCompare(titleB)
+    },
+    sortByDate(a, b) {
+      const newA = this.findYear(a.volumeInfo["publishedDate"]) || 0
+      const newB = this.findYear(b.volumeInfo["publishedDate"]) || 0
+      return (["oldest"].includes(this.booksSortTypeActive)) ? newA - newB : newB - newA
+    },
+    sortByStars(a, b) {
+      const newA = a.volumeInfo["averageRating"] || 0
+      const newB = b.volumeInfo["averageRating"] || 0
+      return (["oldest"].includes(this.booksSortTypeActive)) ? newA - newB : newB - newA
     }
   },
   computed: {
     bookOrganizedData: function () {
-      const comparator = (a, b) => {
-        if (["AZName", "ZAName"].includes(this.booksSortType)) {
-          const titleA = a.volumeInfo["title"] || ""
-          const titleB = b.volumeInfo["title"] || ""
-          return titleA.localeCompare(titleB)
-        }
-        else if (["AZAuthors", "ZAAuthors"].includes(this.booksSortType)) {
-          const authorsA = a.volumeInfo["authors"][0] || ""
-          const authorsB = b.volumeInfo["authors"][0] || ""
-          return authorsA.localeCompare(authorsB)
-        }
-        else if (["newest", "oldest"].includes(this.booksSortType)) {
-          const newA = this.findYear(a.volumeInfo["publishedDate"]) || 0
-          const newB = this.findYear(b.volumeInfo["publishedDate"]) || 0
-          return (["oldest"].includes(this.booksSortType)) ? newA - newB : newB - newA
-        }
-        else {
-          const ratingA = a.volumeInfo["averageRating"] || 0
-          const ratingB = b.volumeInfo["averageRating"] || 0
-          return (["topStars"].includes(this.booksSortType)) ? ratingB - ratingA : ratingA - ratingB 
-        }
-      }
-      const reversed = ["ZAName", "ZAAuthors"].includes(this.booksSortType) ? -1 : 1
+      const reversed = ["ZAName", "ZAAuthors"].includes(this.booksSortTypeActive) ? -1 : 1
       const filterFunc = (a) => a.volumeInfo["title"].toLowerCase().includes(this.bookSearch.toLowerCase())
+      const selectedSortType = this.booksSortType.find(
+        sort => sort.value === this.booksSortTypeActive
+      )
+      const sortFunction = selectedSortType ? selectedSortType.sortFunction : null
 
       let data = this.bookData.slice()
       data = data.filter(filterFunc)
-      data.sort(comparator)
+      data.sort(sortFunction)
       if (reversed == -1) data = data.reverse()
-      this.setBooksSortType(this.booksSortType)
       return data
     }
   },
   watch: {
     bookOrganizedData: {
-      handler: function (data) {
-        this.bookData = data
-      }
+      handler: function (data) { this.bookData = data }
+    },
+    search() {
+      if (this.typeOfSearch == "user") this.retrieveBookData()
     }
   },
-  beforeMount() {
+  mounted() {
     this.retrieveBookData()
-    const initSortType = this.getBooksSortType() || "AZName"
-    this.booksSortType = initSortType
-    this.setBooksSortType(initSortType)
   }
 }
 </script>
@@ -224,5 +240,6 @@ label {
     padding: 4rem 1rem;
   }
 
-}</style>
+}
+</style>
   

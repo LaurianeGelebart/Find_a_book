@@ -39,10 +39,10 @@
       </div>
 
       <BookGallery v-for="(category) in categories" :key="category" v-show="this.activPage == category" :name=category
-        :category=category></BookGallery>
+        :search=category typeOfSearch="category"></BookGallery>
 
-      <BookSearch v-show="this.activPage == 'Search'" :name=this.userSearch :activPage=this.activPage
-        :userSearch=this.userSearch></BookSearch>
+      <BookGallery v-show="this.activPage == 'Search'" :name=this.userSearch 
+        :search=this.userSearch typeOfSearch="user"></BookGallery>
 
     </div>
 
@@ -53,7 +53,6 @@
 
 <script>
 import BookGallery from './components/BookGallery.vue'
-import BookSearch from './components/BookSearch.vue'
 import BookCarrousel from './components/BookCarrousel.vue'
 import HeaderPage from './components/HeaderPage.vue'
 import NavbarPage from './components/NavbarPage.vue'
@@ -64,23 +63,15 @@ export default {
   components: {
     BookCarrousel,
     BookGallery,
-    BookSearch,
     HeaderPage,
     NavbarPage,
     FooterPage
   },
   data() {
     return {
-      isOpen: false,
       userSearch: "",
       activPage: "Home",
       categories: ["Action", "Mystery", "Thriller", "Romance", "Adventure", "Classic"]
-    }
-  },
-  methods: {
-    isActiv(page) {
-      this.isOpen = false;
-      this.activPage = page;
     }
   }
 }
