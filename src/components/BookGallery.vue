@@ -76,7 +76,6 @@ export default {
   },
   methods: {
     async retrieveBookData() {
-      console.log(this.search)
       if (this.typeOfSearch == "category") this.bookData = await getBookBySubject(this.search, this.startIndex)
       else {
         if (this.search && this.search !== "") {
