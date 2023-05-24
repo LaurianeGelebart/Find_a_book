@@ -14,10 +14,10 @@
 export default {
   name: 'BookInfos',
   props: {
-    isbn: {type: String},
-    title: {type: String, required: true},
-    date: { type: Number},
-    description: {type: String, required: true}
+    isbn: { type: String, default: () => "ISBN available" },
+    title: { type: String, required: true },
+    date: { type: Number, required: true },
+    description: { type: String, default: () => "" }
   }
 }
 </script>
@@ -50,4 +50,5 @@ p {
   font-size: 1.2rem;
   overflow-y: hidden;
   max-height: 50%;
-}</style>
+}
+</style>

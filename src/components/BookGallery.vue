@@ -4,9 +4,9 @@
     <div class="options">
       <input type="text" v-model="bookSearch" placeholder="Search a book">
       <div class="tri">
-        <label for="bookSort">Sort by</label>
-        <select v-model="booksSortTypeActive" id="bookSort">
-          <option v-for="sort in booksSortType" :key="sort.value" :value="sort.value"
+        <label :for="'bookSort' + search">Sort by</label>
+        <select v-model="booksSortTypeActive" :id="'bookSort' + search">
+          <option v-for="sort in booksSortType" :key="sort.id" :value="sort.value"
             v-bind:selected="booksSortTypeActive === sort.value">{{ sort.name }}</option>
         </select>
       </div>
@@ -113,7 +113,7 @@ export default {
   },
   computed: {
     bookOrganizedData: function () {
-      const reversed = ["ZAName", "ZAAuthors"].includes(this.booksSortTypeActive) ? -1 : 1
+      const reversed = ["ZAName"].includes(this.booksSortTypeActive) ? -1 : 1
       const filterFunc = (a) => a.volumeInfo["title"].toLowerCase().includes(this.bookSearch.toLowerCase())
       const selectedSortType = this.booksSortType.find(
         sort => sort.value === this.booksSortTypeActive
@@ -128,14 +128,11 @@ export default {
     }
   },
   watch: {
-    bookOrganizedData: {
-      handler: function (data) { this.bookData = data }
-    },
     search() {
       if (this.typeOfSearch == "user") this.retrieveBookData()
     }
   },
-  mounted() {
+  beforeMount() {
     this.retrieveBookData()
   }
 }

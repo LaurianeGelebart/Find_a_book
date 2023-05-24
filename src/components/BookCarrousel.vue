@@ -4,14 +4,14 @@
     <h2>{{ name }}</h2>
 
     <div v-if="bookData" class="contentCarrousel">
-      <img v-on:click="back" class="arrow" id="back" src="../img/back.svg">
+      <img v-on:click="back" class="arrow" id="back" src="back.svg">
       <ul class="carrousel">
         <BookCard class="card" v-for="(item) in bookData" :key="item.id" :infos="item.volumeInfo"
           :authors="item.volumeInfo.authors" :title="item.volumeInfo.title" :image-links="item.volumeInfo.imageLinks"
           :date="findYear(item.volumeInfo['publishedDate'])">
         </BookCard>
       </ul>
-      <img v-on:click="forward" class="arrow" id="forward" src="../img/forward.svg">
+      <img v-on:click="forward" class="arrow" id="forward" src="forward.svg">
     </div>
 
   </section>
@@ -132,4 +132,5 @@ h2 {
   .arrow:hover {
     height: 2.5rem;
   }
-}</style>
+}
+</style>

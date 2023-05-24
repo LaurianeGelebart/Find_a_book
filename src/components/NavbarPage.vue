@@ -11,7 +11,8 @@
 
     <div class="navbarCollapse" :class="{ 'in': isOpen }">
       <button v-on:click="() => isActiv('Home')">Home</button>
-      <button v-for="(category) in categories" :key="category" v-on:click="() => isActiv(category)">{{ category }}</button>
+      <button v-for="(category) in categories" :key="category" v-on:click="() => isActiv(category)">{{ category
+      }}</button>
     </div>
 
   </nav>
@@ -139,4 +140,5 @@ nav {
     border-bottom: none;
     background-color: var(--accent-color-hover);
   }
-}</style>
+}
+</style>

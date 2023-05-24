@@ -1,5 +1,5 @@
 <template>
-  <div v-if="imageLinks" class="BookCard" 
+  <div class="BookCard" 
     @mouseover="isMobile ? null : vueInfo = true"
     @click="isMobile ? vueInfo = !vueInfo : null" 
     @mouseleave="isMobile ? null : vueInfo = false">
@@ -27,11 +27,11 @@ export default {
     BookInfos
   },
   props: {
-    authors: { type: Object, required: true },
-    infos: { type: Object, required: true },
-    title: { type: String, required: true },
-    imageLinks: { type: Object },
-    date: { type: Number, required: true }
+    authors: { type: Object, default: () => ({ 0: "Authors available" }) },
+    infos: { type: Object, default: () => ({}) },
+    title: { type: String, default: () => "Name available" },
+    imageLinks: { type: Object, default: () => ({"smallThumbnail" : "CoverNotAvailable.jpg"}) },
+    date: { type: Number, default: () => 0}
   },
   data() {
     return {
@@ -48,7 +48,7 @@ export default {
   },
   beforeMount() {
     this.getStars()
-    const mediaQuery = window.matchMedia('(max-width: 1024px)');
+    const mediaQuery = window.matchMedia('(max-width: 1024px)')
     this.isMobile = mediaQuery.matches;
   }
 }

@@ -2,7 +2,7 @@
   <div id="app">
 
     <HeaderPage v-model:userSearch="userSearch" v-model:activPage="activPage"></HeaderPage>
-    
+
     <NavbarPage v-model:activPage="activPage" :categories=categories></NavbarPage>
 
     <a href="#top" class="fleche">
@@ -41,8 +41,8 @@
       <BookGallery v-for="(category) in categories" :key="category" v-show="this.activPage == category" :name=category
         :search=category typeOfSearch="category"></BookGallery>
 
-      <BookGallery v-show="this.activPage == 'Search'" :name=this.userSearch 
-        :search=this.userSearch typeOfSearch="user"></BookGallery>
+      <BookGallery v-show="this.activPage == 'Search'" :name=this.userSearch :search=this.userSearch typeOfSearch="user">
+      </BookGallery>
 
     </div>
 
@@ -176,4 +176,5 @@ input {
   h2 {
     font-size: 2.5rem;
   }
-}</style>
+}
+</style>

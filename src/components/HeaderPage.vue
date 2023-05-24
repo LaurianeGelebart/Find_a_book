@@ -66,7 +66,7 @@ export default {
 
 <style scoped>
 .HeaderPage {
-  background: center no-repeat url("../img/images.jpeg");
+  background: center no-repeat url("../img/background.jpeg");
   background-size: cover;
   margin: 0;
   height: 50vh;
@@ -173,5 +173,6 @@ export default {
     width: 16rem;
     margin: auto 1.5rem;
   }
-}</style>
+}
+</style>
   
